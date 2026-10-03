@@ -1,0 +1,46 @@
+import { Agent } from '@mastra/core/agent';
+import { chatModel } from './lm-studio';
+import { REQUIREMENTS_PROMPT, SDLC_PROMPT, PAYMENT_PROCESSING_PROMPT } from './prompts';
+import { ragContextProcessor } from './rag';
+import { architectWorkspace } from './workspace';
+
+const options = {
+  modelSettings: { maxOutputTokens: 3500 },
+  providerOptions: { lmStudio: { reasoningEffort: 'none', enable_thinking: false } },
+} as const;
+
+export const requirementsAgent = new Agent({
+  id: 'requirements-agent',
+  name: 'Requirements Agent',
+  description: '(i) Identify and list software requirements for a finance scenario.',
+  instructions: REQUIREMENTS_PROMPT,
+  model: chatModel,
+  defaultOptions: options,
+  workspace: architectWorkspace,
+  inputProcessors: [ragContextProcessor],
+});
+
+export const sdlcSelectionAgent = new Agent({
+  id: 'sdlc-selection-agent',
+  name: 'SDLC Selection Agent',
+  description: '(ii) Identify a suitable SDLC for a completed requirements specification.',
+  instructions: SDLC_PROMPT,
+  model: chatModel,
+  defaultOptions: {
+    ...options,
+    modelSettings: { maxOutputTokens: 3000 },
+  },
+  workspace: architectWorkspace,
+  inputProcessors: [ragContextProcessor],
+});
+
+export const paymentProcessingAgent = new Agent({
+  id: 'payment-processing-agent',
+  name: 'Payment Processing Agent',
+  description: '(iii) Analyze payment processing systems in the finance sector, covering requirements, security, compliance, and architecture.',
+  instructions: PAYMENT_PROCESSING_PROMPT,
+  model: chatModel,
+  defaultOptions: options,
+  workspace: architectWorkspace,
+  inputProcessors: [ragContextProcessor],
+});
