@@ -103,7 +103,6 @@ Load these models in LM Studio before starting ZPay:
 ### 3. Configure environment
 
 ```bash
-git clone https://github.com/AppajiDheeraj/ZPay.git
 cd ZPay
 npm install
 cp .env.example .env
@@ -174,11 +173,13 @@ ZPay/
 ### Payment Processing Analysis
 
 **Via Mastra Studio:**
+
 1. Start LM Studio and load the model
 2. Run `npm run dev`
 3. Open Mastra Studio at the local URL
 4. Navigate to **Workflows → payment-processing-analysis**
 5. Enter your scenario, for example:
+
    ```
    Design a payment processing system for an e-commerce platform in India that needs to handle:
    - Multiple payment methods: UPI, credit/debit cards, net banking, and wallets
@@ -188,10 +189,12 @@ ZPay/
    - Real-time fraud detection
    - Automatic reconciliation with bank statements
    ```
+
 6. Run the workflow
 7. View the output in `artifacts/evaluation/payment-analysis.md` or `payment-analysis.html`
 
 **Programmatically:**
+
 ```typescript
 import { runPaymentProcessingAnalysis } from './src/mastra/workflow.js';
 

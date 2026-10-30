@@ -5,7 +5,7 @@ import { ragContextProcessor } from './rag';
 import { architectWorkspace } from './workspace';
 
 const options = {
-  modelSettings: { maxOutputTokens: 3500 },
+  modelSettings: { maxOutputTokens: 1024 },
   providerOptions: { lmStudio: { reasoningEffort: 'none', enable_thinking: false } },
 } as const;
 
@@ -26,10 +26,7 @@ export const sdlcSelectionAgent = new Agent({
   description: '(ii) Identify a suitable SDLC for a completed requirements specification.',
   instructions: SDLC_PROMPT,
   model: chatModel,
-  defaultOptions: {
-    ...options,
-    modelSettings: { maxOutputTokens: 3000 },
-  },
+  defaultOptions: options,
   workspace: architectWorkspace,
   inputProcessors: [ragContextProcessor],
 });
