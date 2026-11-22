@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ZPay - Requirements Engineering Assistant</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="logo">Z</span><div><strong>ZPay</strong><small>Requirements &amp; SDLC assistant for financial services</small></div></div>
+    <nav id="tabs">
+      <button data-view="analyze" class="active">Analyze</button>
+      <button data-view="interview">Interview</button>
+      <button data-view="kb">Knowledge base</button>
+      <button data-view="about">Agents &amp; SDLC models</button>
+    </nav>
+    <div id="status" class="pill pill-wait" title="Checking LM Studio...">LM Studio: checking</div>
+  </header>
+
+  <main>
+    <!-- ANALYZE -->
+    <section id="view-analyze" class="view active">
+      <div class="layout">
+        <aside class="card">
+          <h2>New analysis</h2>
+          <label>Project name<input id="project" placeholder="e.g. UPI merchant payments"></label>
+          <label>Financial use case<select id="useCase"></select></label>
+          <label>Stakeholder role<select id="role"></select></label>
+          <label>Stakeholder input
+            <textarea id="text" rows="11" placeholder="Paste an interview transcript, email, meeting notes or requirement document..."></textarea>
+          </label>
+          <label>Reviewer notes <span class="muted">(optional, used when re-running)</span>
+            <textarea id="notes" rows="2" placeholder="e.g. Transaction limit is INR 1,00,000; focus on RBI controls"></textarea>
+          </label>
+          <p class="hint">Sensitive values (cards, Aadhaar, PAN, phone, e-mail, accounts) are masked and prompt-injection phrases removed before anything is sent to the model.</p>
+          <div class="row">
+            <button id="run" class="primary">Run analysis</button>
+            <button id="sample" class="ghost">Load sample</button>
+          </div>
+        </aside>
+
+        <section class="results">
+          <div class="card" id="pipeline-card">
+            <h2>Agent pipeline <span id="run-id" class="muted"></span></h2>
+            <ol id="stages" class="stages"></ol>
+            <div id="error" class="alert error hidden"></div>
+          </div>
+
+          <div id="output" class="hidden">
+            <div class="card">
+              <div id="baseline" class="baseline"></div>
+              <div id="metrics" class="metrics"></div>
+            </div>
+            <div class="card">
+              <div class="subtabs" id="subtabs">
+                <button data-tab="req" class="active">Requirements</button>
+                <button data-tab="comp">Compliance</button>
+                <button data-tab="risk">Risks</button>
+                <button data-tab="sdlc">SDLC</button>
+                <button data-tab="open">Open issues</button>
+                <button data-tab="ev">Evidence</button>
+                <button data-tab="srs">SRS document</button>
+                <button data-tab="audit">Audit trail</button>
+              </div>
+              <div id="tab-body"></div>
+            </div>
+            <div class="card approval hidden" id="approval">
+              <h2>Human approval</h2>
+              <p class="muted">Review each requirement above (approve, edit or reject), confirm the SDLC choice, then submit. The baseline is only created when every step is approved.</p>
+              <div class="grid2">
+                <div>
+                  <h3>SDLC choice - approvals</h3>
+                  <div id="sdlc-approvers"></div>
+                </div>
+                <div>
+                  <label>Reviewer name<input id="reviewer" placeholder="Your name"></label>
+                  <label class="check"><input type="checkbox" id="regAck"> I acknowledge that regulatory mappings are advisory and have been reviewed by compliance/legal.</label>
+                </div>
+              </div>
+              <div class="row">
+                <button id="approve-all" class="ghost">Approve all requirements</button>
+                <button id="submit-approval" class="primary">Submit decisions</button>
+                <button id="rerun" class="ghost">Re-run with reviewer notes</button>
+              </div>
+            </div>
+            <div class="row end hidden" id="downloads">
+              <a id="dl-srs" class="btn" href="#">Download SRS (.md)</a>
+            </div>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <!-- INTERVIEW -->
+    <section id="view-interview" class="view">
+      <div class="layout">
+        <aside class="card">
+          <h2>Stakeholder interview</h2>
+          <label>Use case<select id="i-useCase"></select></label>
+          <label>Interviewee role<select id="i-role"></select></label>
+          <h3>Role template</h3>
+          <ul id="i-template" class="plain"></ul>
+          <h3>Topics to cover</h3>
+          <ul id="i-topics" class="plain chips"></ul>
+          <div class="row">
+            <button id="i-reset" class="ghost">Restart</button>
+            <button id="i-analyze" class="primary">Send transcript to Analyze</button>
+          </div>
+        </aside>
+        <section class="card chat">
+          <div id="chat-log" class="chat-log"></div>
+          <form id="chat-form">
+            <textarea id="chat-input" rows="2" placeholder="Answer as the stakeholder... (Enter to send, Shift+Enter for new line)"></textarea>
+            <button class="primary" id="chat-send">Send</button>
+          </form>
+        </section>
+      </div>
+    </section>
+
+    <!-- KB -->
+    <section id="view-kb" class="view">
+      <div class="card">
+        <h2>Knowledge base search (RAG)</h2>
+        <p class="muted" id="kb-info"></p>
+        <form id="kb-form" class="row"><input id="kb-q" placeholder="e.g. KYC re-verification periodicity, step-up authentication, outsourcing IT" style="flex:1"><button class="primary">Search</button></form>
+        <div id="kb-results"></div>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="view-about" class="view">
+      <div class="card"><h2>Agents</h2><div id="agents-list" class="grid3"></div></div>
+      <div class="card"><h2>Supported SDLC models</h2><div id="sdlc-list" class="grid3"></div></div>
+    </section>
+  </main>
+
+  <script src="/vendor/marked.min.js"></script>
+  <script src="/vendor/mermaid.min.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>
